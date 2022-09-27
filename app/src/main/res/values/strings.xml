@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Assignment 1</string>
+    <string name="title_pizza">Pizza Time Vegan Pizza</string>
+    <string name="prompt_size">Select Size:</string>
+    <string name="prompt_toppings">Select Toppings:</string>
+    <string name="text_placeholder">Placeholder</string>
+    <string name="prompt_cheese">Extra Cheese ($2)</string>
+    <string name="prompt_delivery">Include Delivery ($10)</string>
+    <string name="text_slogan">\"All toppings $1 or it\'s free\"</string>
+    <string name="prompt_checkout">Checkout</string>
+    <string name="title_summary">Order Summary</string>
+
+    <string-array name="array_sizes">
+        <item>Small (6")</item>
+        <item>Medium (8")</item>
+        <item>Large (10")</item>
+        <item>X-Large (12")</item>
+    </string-array>
+
+    <string-array name="array_toppings">
+        <item>Tomato</item>
+        <item>Mushroom</item>
+        <item>Pepper</item>
+        <item>Beef (Real)</item>
+        <item>Pineapple</item>
+        <item>Olives</item>
+    </string-array>
+</resources>
