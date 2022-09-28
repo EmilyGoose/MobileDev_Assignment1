@@ -8,6 +8,7 @@
     <string name="prompt_delivery">Include Delivery ($10)</string>
     <string name="text_slogan">\"All toppings $1 or it\'s free\"</string>
     <string name="prompt_checkout">Checkout</string>
+    <string name="prompt_continue">Continue</string>
     <string name="title_summary">Order Summary</string>
 
     <string-array name="array_sizes">
@@ -25,4 +26,6 @@
         <item>Pineapple</item>
         <item>Olives</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
