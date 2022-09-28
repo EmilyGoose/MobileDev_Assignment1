@@ -4,11 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.CheckBox
-import android.widget.Spinner
+import android.widget.*
 import androidx.core.os.bundleOf
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import com.google.android.material.chip.Chip
@@ -22,6 +20,7 @@ class PizzaFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var ingredientChips: ChipGroup
     private lateinit var cheeseBox: CheckBox
     private lateinit var deliveryBox: CheckBox
+    private lateinit var instructionField: EditText
 
     // Declare imported resources
     private lateinit var toppingArray: Array<String>
@@ -42,10 +41,6 @@ class PizzaFragment : Fragment(), AdapterView.OnItemSelectedListener {
         return inflater.inflate(R.layout.fragment_pizza, container, false)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -54,6 +49,7 @@ class PizzaFragment : Fragment(), AdapterView.OnItemSelectedListener {
         ingredientChips = view.findViewById(R.id.chip_group_toppings)
         cheeseBox = view.findViewById(R.id.checkbox_cheese)
         deliveryBox = view.findViewById(R.id.checkbox_delivery)
+        instructionField = view.findViewById(R.id.field_instructions)
 
         // Import resources
         toppingArray = resources.getStringArray(R.array.array_toppings)
@@ -99,16 +95,27 @@ class PizzaFragment : Fragment(), AdapterView.OnItemSelectedListener {
             // Parent the new chip to the ChipGroup
             ingredientChips.addView(newChip)
         }
+
+        // Set listener for special instructions field
+        instructionField.addTextChangedListener {
+            // Sending the result every time the field changes is a bit jank but whatever
+            setFragmentResult("PizzaFragment", bundleOf("instructions" to it.toString()))
+        }
     }
 
     // Function to update the price displayed to the user
-    private fun updatePrice() { // Reset total price for calculation
-        totalPrice = 0 // Add the size price
-        totalPrice += sizePrice // Add the topping price
-        totalPrice += toppingsSelected * 1 // Add cheese price if checked
+    private fun updatePrice() {
+        // Reset total price for calculation
+        totalPrice = 0
+        // Add the size price
+        totalPrice += sizePrice
+        // Add the topping price
+        totalPrice += toppingsSelected * 1
+        // Add cheese price if checked
         if (cheeseBox.isChecked) {
             totalPrice += 2
-        } // Add delivery price if checked
+        }
+        // Add delivery price if checked
         if (deliveryBox.isChecked) {
             totalPrice += 10
         }
@@ -120,7 +127,8 @@ class PizzaFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     override fun onItemSelected(
         parent: AdapterView<*>, view: View, pos: Int, id: Long
-    ) { // Grab price corresponding to selected size
+    ) {
+        // Grab price corresponding to selected size
         sizePrice = sizePriceArray[pos]
         updatePrice()
     }

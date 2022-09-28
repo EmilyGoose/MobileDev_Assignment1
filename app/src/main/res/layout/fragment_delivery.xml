@@ -1,14 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".DeliveryFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
+        style="@style/TextAppearance.Material3.BodyLarge"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:labelFor="@id/field_name"
+        android:text="@string/prompt_name" />
 
-</FrameLayout>
+    <EditText
+        android:id="@+id/field_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autofillHints="name"
+        android:inputType="textPersonName" />
+
+    <TextView
+        style="@style/TextAppearance.Material3.BodyLarge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/field_phone"
+        android:text="@string/prompt_phone" />
+
+    <EditText
+        android:id="@+id/field_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autofillHints="phone"
+        android:inputType="phone" />
+
+    <LinearLayout
+        android:id="@+id/form_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/TextAppearance.Material3.BodyLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:labelFor="@id/field_address"
+            android:text="@string/prompt_address"/>
+
+        <EditText
+            android:id="@+id/field_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="postalAddress"
+            android:inputType="textPostalAddress"/>
+    </LinearLayout>
+
+
+</LinearLayout>

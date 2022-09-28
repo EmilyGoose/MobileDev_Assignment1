@@ -14,14 +14,15 @@ class OrderSummaryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_order_summary)
+        supportActionBar?.hide()
 
         // Get the intent extras
-        val price = this.intent.getIntExtra("price", 0)
+        val price = this.intent.getStringExtra("price")
 
         // Initialize view variables
         priceDisplay = findViewById(R.id.display_price)
 
-        priceDisplay.text = NumberFormat.getCurrencyInstance().format(price)
+        priceDisplay.text = price
 
     }
 }
