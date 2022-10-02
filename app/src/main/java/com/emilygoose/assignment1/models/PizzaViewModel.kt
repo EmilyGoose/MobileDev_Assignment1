@@ -9,28 +9,29 @@ import com.emilygoose.assignment1.enum.PizzaSize
 class PizzaViewModel : ViewModel() {
 
     // Initialize MutableLiveData fields for the ViewModel
-    // Array of selected toppings
+    // Array of selected toppings with default empty
     private val mutableToppingArray = MutableLiveData<MutableList<String>>()
-    val selectedToppings: LiveData<MutableList<String>> get() = mutableToppingArray
+    val selectedToppings: MutableList<String> get() = mutableToppingArray.value ?: mutableListOf()
 
-    // Currently selected size
+    // Currently selected size with default small
     private val mutableSize = MutableLiveData<PizzaSize>()
-    val selectedSize: LiveData<PizzaSize> get() = mutableSize
+    val selectedSize: PizzaSize get() = mutableSize.value ?: PizzaSize.SMALL
 
-    // Special instructions from EditText field
+    // Special instructions from EditText field with default empty
     private val mutableInstructions = MutableLiveData<String>()
-    val instructions: LiveData<String> get() = mutableInstructions
+    val instructions: String get() = mutableInstructions.value ?: ""
 
-    // Cheese checkbox
+    // Cheese checkbox with default false
     private val mutableCheese = MutableLiveData<Boolean>()
-    val hasCheese: LiveData<Boolean> get() = mutableCheese
+    val hasCheese: Boolean get() = mutableCheese.value ?: false
 
-    // Delivery checkbox
+    // Delivery checkbox with default false
     private val mutableDelivery = MutableLiveData<Boolean>()
-    val hasDelivery: LiveData<Boolean> get() = mutableDelivery
+    val hasDelivery: Boolean get() = mutableDelivery.value ?: false
 
     // Price - Calculated in this ViewModel using updatePrice()
     private val mutablePrice = MutableLiveData<Int>()
+    // Make this return LiveData since MainActivity observes it
     val price: LiveData<Int> get() = mutablePrice
 
     init {
@@ -71,7 +72,7 @@ class PizzaViewModel : ViewModel() {
     // Removes topping from MutableList
     fun removeTopping(topping: String) {
         // Check that the value exists - We use == true for null safety
-        if (selectedToppings.value?.contains(topping) == true) {
+        if (selectedToppings.contains(topping)) {
             // Remove the specified topping
             mutableToppingArray.value?.remove(topping)
         }
@@ -81,12 +82,12 @@ class PizzaViewModel : ViewModel() {
     private fun updatePrice() {
         var totalPrice = 0
         // Add the size price
-        totalPrice += selectedSize.value?.price ?: 0
+        totalPrice += selectedSize.price
         // Add topping price (Length of topping array, since each is $1)
-        totalPrice += selectedToppings.value?.size ?: 0
+        totalPrice += selectedToppings.size
         // Check for cheese and delivery (Use ==true for null safety)
-        totalPrice += if (hasCheese.value == true) 2 else 0
-        totalPrice += if (hasDelivery.value == true) 10 else 0
+        totalPrice += if (hasCheese) 2 else 0
+        totalPrice += if (hasDelivery) 10 else 0
 
         // Update MutableLiveData
         mutablePrice.value = totalPrice
