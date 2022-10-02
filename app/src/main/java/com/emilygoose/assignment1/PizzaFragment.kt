@@ -1,6 +1,8 @@
 package com.emilygoose.assignment1
 
+import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +11,7 @@ import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
+import com.emilygoose.assignment1.enum.PizzaSize
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import java.text.NumberFormat
@@ -24,16 +27,12 @@ class PizzaFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     // Declare imported resources
     private lateinit var toppingArray: Array<String>
-    private lateinit var sizePriceArray: IntArray
 
     // Fragment-level variables
     private var toppingsSelected = 0
     private var sizePrice = 0
     private var totalPrice = 0
-
-    companion object {
-        fun newInstance() = PizzaFragment()
-    }
+    private val toppingSelectedArray = ArrayList<String>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -53,7 +52,6 @@ class PizzaFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
         // Import resources
         toppingArray = resources.getStringArray(R.array.array_toppings)
-        sizePriceArray = resources.getIntArray(R.array.array_size_prices)
 
         // Set select listener
         sizeSpinner.onItemSelectedListener = this
@@ -84,12 +82,16 @@ class PizzaFragment : Fragment(), AdapterView.OnItemSelectedListener {
             newChip.setOnClickListener {
                 if ((it as Chip).isChecked) {
                     toppingsSelected++
+                    toppingSelectedArray.add(topping)
                 } else {
                     toppingsSelected--
+                    toppingSelectedArray.remove(topping)
                 }
 
                 // Update price now that toppings have changed
                 updatePrice()
+
+                TODO("Needs to update ViewModel")
             }
 
             // Parent the new chip to the ChipGroup
@@ -97,25 +99,19 @@ class PizzaFragment : Fragment(), AdapterView.OnItemSelectedListener {
         }
 
         // Set listener for special instructions field
-        instructionField.addTextChangedListener {
-            // Sending the result every time the field changes is a bit jank but whatever
-            setFragmentResult("PizzaFragment", bundleOf("instructions" to it.toString()))
+        instructionField.addTextChangedListener { // Sending the result every time the field changes is a bit jank but whatever
+            TODO("Needs to update ViewModel")
         }
     }
 
     // Function to update the price displayed to the user
-    private fun updatePrice() {
-        // Reset total price for calculation
-        totalPrice = 0
-        // Add the size price
-        totalPrice += sizePrice
-        // Add the topping price
-        totalPrice += toppingsSelected * 1
-        // Add cheese price if checked
+    private fun updatePrice() { // Reset total price for calculation
+        totalPrice = 0 // Add the size price
+        totalPrice += sizePrice // Add the topping price
+        totalPrice += toppingsSelected * 1 // Add cheese price if checked
         if (cheeseBox.isChecked) {
             totalPrice += 2
-        }
-        // Add delivery price if checked
+        } // Add delivery price if checked
         if (deliveryBox.isChecked) {
             totalPrice += 10
         }
@@ -129,12 +125,23 @@ class PizzaFragment : Fragment(), AdapterView.OnItemSelectedListener {
         parent: AdapterView<*>, view: View, pos: Int, id: Long
     ) {
         // Grab price corresponding to selected size
-        sizePrice = sizePriceArray[pos]
+        val sizeString = parent.getItemAtPosition(pos).toString()
+        // This loop has to look up resources every time might need to eval for performance
+        for (pizzaSize in PizzaSize.values()) {
+            Log.println(Log.DEBUG, "PizzaFragment", "Size String: $sizeString")
+            Log.println(Log.DEBUG, "PizzaFragment", "Checking: " + resources.getString(pizzaSize.displayStringResourceId))
+            // Find the pizza size corresponding to the price
+            if (resources.getString(pizzaSize.displayStringResourceId) == sizeString) {
+                sizePrice = pizzaSize.price
+                break
+            }
+        }
         updatePrice()
     }
 
-    override fun onNothingSelected(parent: AdapterView<*>) { // Default size price for small so nothing breaks
-        sizePrice = sizePriceArray[0]
+    override fun onNothingSelected(parent: AdapterView<*>) {
+        // Default to small pizza
+        sizePrice = PizzaSize.SMALL.price
         updatePrice()
     }
 

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <integer-array name="array_size_prices">
-        <item>6</item>
-        <item>9</item>
-        <item>12</item>
-        <item>15</item>
-    </integer-array>
-</resources>

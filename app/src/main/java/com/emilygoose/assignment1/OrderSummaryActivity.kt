@@ -18,6 +18,7 @@ class OrderSummaryActivity : AppCompatActivity() {
 
         // Get the intent extras
         val price = this.intent.getStringExtra("price")
+        val toppings = this.intent.getStringArrayExtra("toppings")
 
         // Initialize view variables
         priceDisplay = findViewById(R.id.display_price)
