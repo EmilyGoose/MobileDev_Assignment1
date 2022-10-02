@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.activityViewModels
+import com.emilygoose.assignment1.models.CustomerViewModel
 
 class DeliveryFragment : Fragment() {
 
@@ -16,6 +16,9 @@ class DeliveryFragment : Fragment() {
     private lateinit var nameField: EditText
     private lateinit var phoneField: EditText
     private lateinit var addressField: EditText
+
+    // Initialize ViewModel to share data with MainActivity
+    private val customerViewModel: CustomerViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -34,20 +37,16 @@ class DeliveryFragment : Fragment() {
 
         // Add listeners to each of the fields - Need to see if there's a better way
         nameField.addTextChangedListener {
-            // Sending the result every time the field changes is a bit jank but whatever
-            setFragmentResult("DeliveryFragment", bundleOf("name" to it.toString()))
+            // Update the ViewModel
+            customerViewModel.setName(it.toString())
         }
         phoneField.addTextChangedListener {
-            // Sending the result every time the field changes is a bit jank but whatever
-            setFragmentResult("DeliveryFragment", bundleOf("phone" to it.toString()))
+            // Update the ViewModel
+            customerViewModel.setPhone(it.toString())
         }
         addressField.addTextChangedListener {
-            // Sending the result every time the field changes is a bit jank but whatever
-            setFragmentResult("DeliveryFragment", bundleOf("address" to it.toString()))
+            // Update the ViewModel
+            customerViewModel.setAddress(it.toString())
         }
-    }
-
-    companion object {
-        fun newInstance() = DeliveryFragment()
     }
 }

@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import com.emilygoose.assignment1.models.CustomerViewModel
 import com.emilygoose.assignment1.models.PizzaViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -18,8 +19,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var priceLabel: TextView
     private lateinit var checkoutButton: Button
 
-    // Initialize ViewModel to share data with fragments
+    // Initialize ViewModels to share data with fragments
     private val pizzaViewModel: PizzaViewModel by viewModels()
+    private val customerViewModel: CustomerViewModel by viewModels()
 
     // Activity-level variables
     private var price = ""
