@@ -9,21 +9,27 @@ import com.emilygoose.assignment1.enum.PizzaSize
 class PizzaViewModel : ViewModel() {
 
     // Initialize MutableLiveData fields for the ViewModel
+    // Array of selected toppings
     private val mutableToppingArray = MutableLiveData<MutableList<String>>()
     val selectedToppings: LiveData<MutableList<String>> get() = mutableToppingArray
 
+    // Currently selected size
     private val mutableSize = MutableLiveData<PizzaSize>()
     val selectedSize: LiveData<PizzaSize> get() = mutableSize
 
+    // Special instructions from EditText field
     private val mutableInstructions = MutableLiveData<String>()
     val instructions: LiveData<String> get() = mutableInstructions
 
+    // Cheese checkbox
     private val mutableCheese = MutableLiveData<Boolean>()
     val hasCheese: LiveData<Boolean> get() = mutableCheese
 
+    // Delivery checkbox
     private val mutableDelivery = MutableLiveData<Boolean>()
     val hasDelivery: LiveData<Boolean> get() = mutableDelivery
 
+    // Price - Calculated in this ViewModel using updatePrice()
     private val mutablePrice = MutableLiveData<Int>()
     val price: LiveData<Int> get() = mutablePrice
 
@@ -39,18 +45,18 @@ class PizzaViewModel : ViewModel() {
         updatePrice()
     }
 
-    // Set special instructions
+    // Sets special instructions
     fun setInstructions(newText: String) {
         mutableInstructions.value = newText
     }
 
-    // Set whether cheese exists
+    // Sets whether cheese exists
     fun setCheese(cheese: Boolean) {
         mutableCheese.value = cheese
         updatePrice()
     }
 
-    // Set whether customer wants delivery
+    // Sets whether customer wants delivery
     fun setDelivery(delivery: Boolean) {
         mutableDelivery.value = delivery
         updatePrice()
