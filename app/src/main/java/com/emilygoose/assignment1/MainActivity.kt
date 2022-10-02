@@ -1,18 +1,25 @@
 package com.emilygoose.assignment1
 
 import android.content.Intent
+import android.icu.text.NumberFormat
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import com.emilygoose.assignment1.models.PizzaViewModel
 
 class MainActivity : AppCompatActivity() {
 
     // Declare view variables
     private lateinit var priceLabel: TextView
     private lateinit var checkoutButton: Button
+
+    // Initialize ViewModel to share data with fragments
+    private val pizzaViewModel: PizzaViewModel by viewModels()
 
     // Activity-level variables
     private var price = ""
@@ -29,13 +36,11 @@ class MainActivity : AppCompatActivity() {
         // Tracks what stage of the form we're in
         var pizzaStage = true
 
-        // Create a fragment result listener for the price
-        supportFragmentManager.setFragmentResultListener(
-            "PizzaFragment", this
-        ) { _, bundle ->
-            // Get the price - We use the FragmentResultListener since this updates in real-time
-            val priceResult = bundle.getString("price")
-            priceLabel.text = priceResult
+        // Observe the ViewModel price for changes
+        pizzaViewModel.price.observe(this) { price ->
+            Log.println(Log.DEBUG, "ViewModel", price.toString())
+            // Update view to display price
+            priceLabel.text = NumberFormat.getCurrencyInstance().format(price)
         }
 
         // Create the fragment for the first page of the order form
@@ -56,6 +61,7 @@ class MainActivity : AppCompatActivity() {
                     replace<DeliveryFragment>(R.id.fragment_container_view)
                 }
 
+                // Set checkout button prompt to next stage
                 checkoutButton.text = getString(R.string.prompt_checkout)
             } else {
                 // Move to next activity
@@ -64,6 +70,5 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
-
     }
 }

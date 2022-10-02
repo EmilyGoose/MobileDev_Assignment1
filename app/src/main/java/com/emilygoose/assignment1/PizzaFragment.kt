@@ -1,20 +1,17 @@
 package com.emilygoose.assignment1
 
-import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.activityViewModels
 import com.emilygoose.assignment1.enum.PizzaSize
+import com.emilygoose.assignment1.models.PizzaViewModel
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import java.text.NumberFormat
 
 class PizzaFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
@@ -25,14 +22,11 @@ class PizzaFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var deliveryBox: CheckBox
     private lateinit var instructionField: EditText
 
+    // Initialize ViewModel to share data with MainActivity
+    private val pizzaViewModel: PizzaViewModel by activityViewModels()
+
     // Declare imported resources
     private lateinit var toppingArray: Array<String>
-
-    // Fragment-level variables
-    private var toppingsSelected = 0
-    private var sizePrice = 0
-    private var totalPrice = 0
-    private val toppingSelectedArray = ArrayList<String>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -56,12 +50,12 @@ class PizzaFragment : Fragment(), AdapterView.OnItemSelectedListener {
         // Set select listener
         sizeSpinner.onItemSelectedListener = this
 
-        // Add listeners for checkboxes to update price
+        // Add listeners for checkboxes to update ViewModel
         cheeseBox.setOnClickListener {
-            updatePrice()
+            pizzaViewModel.setCheese(cheeseBox.isChecked)
         }
         deliveryBox.setOnClickListener {
-            updatePrice()
+            pizzaViewModel.setDelivery(deliveryBox.isChecked)
         }
 
         // Create an array adapter for the spinner
@@ -81,17 +75,12 @@ class PizzaFragment : Fragment(), AdapterView.OnItemSelectedListener {
             // Add click listener to the new chip
             newChip.setOnClickListener {
                 if ((it as Chip).isChecked) {
-                    toppingsSelected++
-                    toppingSelectedArray.add(topping)
+                    // Update the ViewModel
+                    pizzaViewModel.addTopping(topping)
                 } else {
-                    toppingsSelected--
-                    toppingSelectedArray.remove(topping)
+                    // Update the ViewModel
+                    pizzaViewModel.removeTopping(topping)
                 }
-
-                // Update price now that toppings have changed
-                updatePrice()
-
-                TODO("Needs to update ViewModel")
             }
 
             // Parent the new chip to the ChipGroup
@@ -99,50 +88,23 @@ class PizzaFragment : Fragment(), AdapterView.OnItemSelectedListener {
         }
 
         // Set listener for special instructions field
-        instructionField.addTextChangedListener { // Sending the result every time the field changes is a bit jank but whatever
-            TODO("Needs to update ViewModel")
+        instructionField.addTextChangedListener {
+            // Update the ViewModel
+            pizzaViewModel.setInstructions(it.toString())
         }
-    }
-
-    // Function to update the price displayed to the user
-    private fun updatePrice() { // Reset total price for calculation
-        totalPrice = 0 // Add the size price
-        totalPrice += sizePrice // Add the topping price
-        totalPrice += toppingsSelected * 1 // Add cheese price if checked
-        if (cheeseBox.isChecked) {
-            totalPrice += 2
-        } // Add delivery price if checked
-        if (deliveryBox.isChecked) {
-            totalPrice += 10
-        }
-
-        // Update view to display price
-        val priceString = NumberFormat.getCurrencyInstance().format(totalPrice)
-        setFragmentResult("PizzaFragment", bundleOf("price" to priceString))
     }
 
     override fun onItemSelected(
         parent: AdapterView<*>, view: View, pos: Int, id: Long
     ) {
-        // Grab price corresponding to selected size
-        val sizeString = parent.getItemAtPosition(pos).toString()
-        // This loop has to look up resources every time might need to eval for performance
-        for (pizzaSize in PizzaSize.values()) {
-            Log.println(Log.DEBUG, "PizzaFragment", "Size String: $sizeString")
-            Log.println(Log.DEBUG, "PizzaFragment", "Checking: " + resources.getString(pizzaSize.displayStringResourceId))
-            // Find the pizza size corresponding to the price
-            if (resources.getString(pizzaSize.displayStringResourceId) == sizeString) {
-                sizePrice = pizzaSize.price
-                break
-            }
-        }
-        updatePrice()
+        // Get enum value for selected size and update ViewModel
+        val selectedSize = PizzaSize.values()[pos]
+        pizzaViewModel.setSize(selectedSize)
     }
 
     override fun onNothingSelected(parent: AdapterView<*>) {
-        // Default to small pizza
-        sizePrice = PizzaSize.SMALL.price
-        updatePrice()
+        // Update the ViewModel with the default size, small
+        pizzaViewModel.setSize(PizzaSize.SMALL)
     }
 
 }
