@@ -39,6 +39,11 @@
 
     <string name="title_pizza">Pizza Time Vegan Pizza</string>
     <string name="title_summary">Order Summary</string>
+    <string name="title_summary_personal">%1$s, your order:</string>
     <string name="label_size">%1$s Pizza</string>
     <string name="label_toppings">Toppings:</string>
+    <string name="label_delivery">Will be delivered to:</string>
+    <string name="label_pickup">Pick up at:</string>
+    <string name="label_address">Pizza Time Vegan Pizza, 123 Pizza Street</string>
+    <string name="prompt_order">New Order</string>
 </resources>

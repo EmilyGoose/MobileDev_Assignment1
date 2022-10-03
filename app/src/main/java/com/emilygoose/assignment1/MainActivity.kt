@@ -72,7 +72,8 @@ class MainActivity : AppCompatActivity() {
                     "toppings" to Collections.unmodifiableList(pizzaViewModel.selectedToppings)
                         .toTypedArray(),
                     "cheese" to pizzaViewModel.hasCheese,
-                    "delivery" to pizzaViewModel.hasDelivery
+                    "delivery" to pizzaViewModel.hasDelivery,
+                    "instructions" to pizzaViewModel.instructions
                 )
                 // Create bundle of customer info
                 val customerInfo = bundleOf(
