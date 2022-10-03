@@ -3,7 +3,9 @@ package com.emilygoose.assignment1.models
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.emilygoose.assignment1.enum.PizzaSize
+import kotlinx.coroutines.launch
 
 // ViewModel to handle pizza ingredients
 class PizzaViewModel : ViewModel() {
@@ -80,16 +82,19 @@ class PizzaViewModel : ViewModel() {
     }
 
     private fun updatePrice() {
-        var totalPrice = 0
-        // Add the size price
-        totalPrice += selectedSize.price
-        // Add topping price (Length of topping array, since each is $1)
-        totalPrice += selectedToppings.size
-        // Check for cheese and delivery (Use ==true for null safety)
-        totalPrice += if (hasCheese) 2 else 0
-        totalPrice += if (hasDelivery) 10 else 0
+        // Launch as coroutine so it dies when ViewModel is cleared
+        viewModelScope.launch {
+            var totalPrice = 0
+            // Add the size price
+            totalPrice += selectedSize.price
+            // Add topping price (Length of topping array, since each is $1)
+            totalPrice += selectedToppings.size
+            // Check for cheese and delivery (Use ==true for null safety)
+            totalPrice += if (hasCheese) 2 else 0
+            totalPrice += if (hasDelivery) 10 else 0
 
-        // Update MutableLiveData
-        mutablePrice.value = totalPrice
+            // Update MutableLiveData
+            mutablePrice.value = totalPrice
+        }
     }
 }
