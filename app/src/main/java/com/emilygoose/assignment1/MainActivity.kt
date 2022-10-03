@@ -3,11 +3,11 @@ package com.emilygoose.assignment1
 import android.content.Intent
 import android.icu.text.NumberFormat
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import com.emilygoose.assignment1.models.CustomerViewModel
@@ -23,9 +23,6 @@ class MainActivity : AppCompatActivity() {
     private val pizzaViewModel: PizzaViewModel by viewModels()
     private val customerViewModel: CustomerViewModel by viewModels()
 
-    // Activity-level variables
-    private var price = ""
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -40,7 +37,6 @@ class MainActivity : AppCompatActivity() {
 
         // Observe the ViewModel price for changes
         pizzaViewModel.price.observe(this) { price ->
-            Log.println(Log.DEBUG, "ViewModel", price.toString())
             // Update view to display price
             priceLabel.text = NumberFormat.getCurrencyInstance().format(price)
         }
@@ -66,9 +62,25 @@ class MainActivity : AppCompatActivity() {
                 // Set checkout button prompt to next stage
                 checkoutButton.text = getString(R.string.prompt_checkout)
             } else {
+                // Create bundle of order info
+                val orderInfo = bundleOf(
+                    "price" to pizzaViewModel.price.value,
+                    "size" to pizzaViewModel.selectedSize,
+                    "toppings" to pizzaViewModel.selectedToppings,
+                    "cheese" to pizzaViewModel.hasCheese,
+                    "delivery" to pizzaViewModel.hasDelivery
+                )
+                // Create bundle of customer info
+                val customerInfo = bundleOf(
+                    "name" to customerViewModel.name,
+                    "phone" to customerViewModel.phoneNumber,
+                    "address" to customerViewModel.address
+                )
                 // Move to next activity
                 val intent = Intent(this, OrderSummaryActivity::class.java)
-                intent.putExtra("price", price)
+                // Add bundles to intent
+                intent.putExtra("orderInfo", orderInfo)
+                intent.putExtra("customerInfo", customerInfo)
                 startActivity(intent)
             }
         }
