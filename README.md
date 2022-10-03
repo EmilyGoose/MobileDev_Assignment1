@@ -9,4 +9,6 @@ The app is built for a minimum API level of 28 (Android 9).
 
  * Two-step order form using Fragments
  * Price updates in real-time
+ * Good Android code (made with love and pain). ViewModels!!!
  * Separate activity for order summary
+ * Delivery field is hidden when not required
