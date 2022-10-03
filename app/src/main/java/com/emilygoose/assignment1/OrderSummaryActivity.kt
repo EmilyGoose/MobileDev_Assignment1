@@ -55,8 +55,15 @@ class OrderSummaryActivity : AppCompatActivity() {
         val selectedSize = orderInfo.getInt("size")
         sizeLabel.text = getString(R.string.label_size, getString(selectedSize))
 
+        // Check whether user has cheese
+        val hasCheese = orderInfo.getBoolean("cheese")
+
         // Get toppings from the bundle
         var toppingArray = orderInfo.getStringArray("toppings")!!
+        if (hasCheese) {
+            // Add "Extra Cheese" to topping array so I don't need an extra TextView
+            toppingArray = arrayOf(*toppingArray, "Extra Cheese")
+        }
         // Create default value to display if toppings are empty
         if (toppingArray.isEmpty()) {
             toppingArray = arrayOf("None")
