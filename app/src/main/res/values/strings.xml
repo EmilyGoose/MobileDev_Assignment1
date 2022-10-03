@@ -33,6 +33,7 @@
     <string name="prompt_phone">Phone Number:</string>
     <string name="prompt_size">Select Size:</string>
     <string name="prompt_toppings">Select Toppings:</string>
+    <string name="prompt_fields">Please fill out all fields"</string>
 
     <string name="text_placeholder">Placeholder</string>
     <string name="text_slogan">\"All toppings $1 or it\'s free\"</string>

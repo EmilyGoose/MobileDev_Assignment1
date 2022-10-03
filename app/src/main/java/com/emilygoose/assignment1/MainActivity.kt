@@ -5,6 +5,7 @@ import android.icu.text.NumberFormat
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
@@ -63,30 +64,41 @@ class MainActivity : AppCompatActivity() {
                 // Set checkout button prompt to next stage
                 checkoutButton.text = getString(R.string.prompt_checkout)
             } else {
-                // Create bundle of order info
-                val orderInfo = bundleOf(
-                    "price" to pizzaViewModel.price.value,
-                    // Bundle the size string resource because I don't wanna implement Parcelable
-                    "size" to pizzaViewModel.selectedSize.displayStringResourceId,
-                    // Convert MutableList<String> to Array<String> before bundling
-                    "toppings" to Collections.unmodifiableList(pizzaViewModel.selectedToppings)
-                        .toTypedArray(),
-                    "cheese" to pizzaViewModel.hasCheese,
-                    "delivery" to pizzaViewModel.hasDelivery,
-                    "instructions" to pizzaViewModel.instructions
-                )
-                // Create bundle of customer info
-                val customerInfo = bundleOf(
-                    "name" to customerViewModel.name,
-                    "phone" to customerViewModel.phoneNumber,
-                    "address" to customerViewModel.address
-                )
-                // Move to next activity
-                val intent = Intent(this, OrderSummaryActivity::class.java)
-                // Add bundles to intent and start activity
-                intent.putExtra("orderInfo", orderInfo)
-                intent.putExtra("customerInfo", customerInfo)
-                startActivity(intent)
+                // Make sure all 3 fields are filled out before continuing
+                if (
+                    customerViewModel.name.isNotBlank() &&
+                    customerViewModel.phoneNumber.isNotBlank() &&
+                    (!pizzaViewModel.hasDelivery || customerViewModel.address.isNotBlank())
+                ) {
+                    // Create bundle of order info
+                    val orderInfo = bundleOf(
+                        "price" to pizzaViewModel.price.value,
+                        // Bundle the size string resource because I don't wanna implement Parcelable
+                        "size" to pizzaViewModel.selectedSize.displayStringResourceId,
+                        // Convert MutableList<String> to Array<String> before bundling
+                        "toppings" to Collections.unmodifiableList(pizzaViewModel.selectedToppings)
+                            .toTypedArray(),
+                        "cheese" to pizzaViewModel.hasCheese,
+                        "delivery" to pizzaViewModel.hasDelivery,
+                        "instructions" to pizzaViewModel.instructions
+                    )
+                    // Create bundle of customer info
+                    val customerInfo = bundleOf(
+                        "name" to customerViewModel.name,
+                        "phone" to customerViewModel.phoneNumber,
+                        "address" to customerViewModel.address
+                    )
+                    // Move to next activity
+                    val intent = Intent(this, OrderSummaryActivity::class.java)
+                    // Add bundles to intent and start activity
+                    intent.putExtra("orderInfo", orderInfo)
+                    intent.putExtra("customerInfo", customerInfo)
+                    startActivity(intent)
+                } else {
+                    // Show the user an error asking them to fill everything out
+                    Toast.makeText(this, R.string.prompt_fields, Toast.LENGTH_LONG).show()
+                }
+
             }
         }
     }
