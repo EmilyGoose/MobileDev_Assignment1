@@ -11,10 +11,10 @@
         <item>Olives</item>
     </string-array>
 
-    <string name="pizza_size_small">Small (6")</string>
-    <string name="pizza_size_medium">Medium (8")</string>
-    <string name="pizza_size_large">Large (10")</string>
-    <string name="pizza_size_xlarge">X-Large (12")</string>
+    <string name="pizza_size_small">Small (6\")</string>
+    <string name="pizza_size_medium">Medium (8\")</string>
+    <string name="pizza_size_large">Large (10\")</string>
+    <string name="pizza_size_xlarge">X-Large (12\")</string>
 
     <string-array name="array_sizes">
         <item>@string/pizza_size_small</item>
@@ -39,4 +39,6 @@
 
     <string name="title_pizza">Pizza Time Vegan Pizza</string>
     <string name="title_summary">Order Summary</string>
+    <string name="label_size">%1$s Pizza</string>
+    <string name="label_toppings">Toppings:</string>
 </resources>

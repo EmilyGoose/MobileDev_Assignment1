@@ -12,6 +12,7 @@ import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import com.emilygoose.assignment1.models.CustomerViewModel
 import com.emilygoose.assignment1.models.PizzaViewModel
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -65,8 +66,11 @@ class MainActivity : AppCompatActivity() {
                 // Create bundle of order info
                 val orderInfo = bundleOf(
                     "price" to pizzaViewModel.price.value,
-                    "size" to pizzaViewModel.selectedSize,
-                    "toppings" to pizzaViewModel.selectedToppings,
+                    // Bundle the size string resource because I don't wanna implement Parcelable
+                    "size" to pizzaViewModel.selectedSize.displayStringResourceId,
+                    // Convert MutableList<String> to Array<String> before bundling
+                    "toppings" to Collections.unmodifiableList(pizzaViewModel.selectedToppings)
+                        .toTypedArray(),
                     "cheese" to pizzaViewModel.hasCheese,
                     "delivery" to pizzaViewModel.hasDelivery
                 )
@@ -78,7 +82,7 @@ class MainActivity : AppCompatActivity() {
                 )
                 // Move to next activity
                 val intent = Intent(this, OrderSummaryActivity::class.java)
-                // Add bundles to intent
+                // Add bundles to intent and start activity
                 intent.putExtra("orderInfo", orderInfo)
                 intent.putExtra("customerInfo", customerInfo)
                 startActivity(intent)
